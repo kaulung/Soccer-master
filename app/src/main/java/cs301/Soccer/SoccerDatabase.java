@@ -164,18 +164,24 @@ public class SoccerDatabase implements SoccerDB {
      *
      * @see SoccerDB#numPlayers(String)
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     // report number of players on a given team (or all players, if null)
     public int numPlayers(final String teamName) {
-        int counter = 0;
         if(teamName == null){
             return soccerHash.size();
         }
         else{
+            int counter = 0;
+            Enumeration<SoccerPlayer> players = soccerHash.elements();
+            while(players.hasMoreElements()){
+                String holder = players.nextElement().getTeamName();
+                if(players.nextElement().getTeamName() == teamName){
+                    counter++;
+                }
+ 
+            }
             return counter;
         }
-        
     }
 
     /**
