@@ -174,11 +174,9 @@ public class SoccerDatabase implements SoccerDB {
             int counter = 0;
             Enumeration<SoccerPlayer> players = soccerHash.elements();
             while(players.hasMoreElements()){
-                String holder = players.nextElement().getTeamName();
-                if(players.nextElement().getTeamName() == teamName){
+                if(players.nextElement().getTeamName().equals(teamName)){
                     counter++;
                 }
- 
             }
             return counter;
         }
