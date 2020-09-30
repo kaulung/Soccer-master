@@ -271,7 +271,97 @@ public class SoccerDatabase implements SoccerDB {
     // read data from file
     @Override
     public boolean readData(File file) {
-        return file.exists();
+        try {
+            Scanner sc = new Scanner(file);
+            String first = "";
+            String last = "";
+            String key = "";
+            int uniNum = 0;
+            int numHolder = 0;
+            String teamName = "";
+            int counter = 1;
+
+            while(sc.hasNextLine()){
+                String holder1 = sc.nextLine();
+                if(counter == 1) {
+                    first = holder1;
+                    counter++;
+                }
+                else if(counter == 2) {
+                    last = holder1;
+                    if (getPlayer(first, last) != null) {
+                        removePlayer(first, last);
+                    }
+                    key = first + "&#&" + last;
+                    counter++;
+                }
+                else if(counter == 3) {
+                    teamName = holder1;
+                    counter++;
+                }
+                else if(counter == 4) {
+                    uniNum = Integer.parseInt(holder1);
+                    addPlayer(first, last, uniNum, teamName);
+                    counter++;
+                }
+                else if(counter == 5){
+                    numHolder = Integer.parseInt(holder1);
+                    for(int i = 0; i < numHolder; i++) {
+                        soccerHash.get(key).bumpGoals();
+                    }
+                    counter++;
+                }
+                else if (counter == 6) {
+                    numHolder = Integer.parseInt(holder1);
+                    for(int i = 0; i < numHolder; i++) {
+                        soccerHash.get(key).bumpAssists();
+                    }
+                    counter++;
+                }
+                else if (counter == 7) {
+                    numHolder = Integer.parseInt(holder1);
+                    for(int i = 0; i < numHolder; i++) {
+                        soccerHash.get(key).bumpShots();
+                    }
+                    counter++;
+                }
+                else if(counter == 8) {
+                    numHolder = Integer.parseInt(holder1);
+                    for(int i = 0; i < numHolder; i++) {
+                        soccerHash.get(key).bumpSaves();
+                    }
+                    counter++;
+                }
+                else if(counter == 9) {
+                    numHolder = Integer.parseInt(holder1);
+                    for(int i = 0; i < numHolder; i++) {
+                        soccerHash.get(key).bumpFouls();
+                    }
+                    counter++;
+                }
+                else if(counter == 10) {
+                    numHolder = Integer.parseInt(holder1);
+                    for(int i = 0; i < numHolder; i++) {
+                        soccerHash.get(key).bumpYellowCards();
+                    }
+                    counter++;
+                }
+                else if(counter == 11) {
+                    numHolder = Integer.parseInt(holder1);
+                    for(int i = 0; i < numHolder; i++) {
+                        soccerHash.get(key).bumpRedCards();
+                    }
+                    counter = 1;
+                }
+            }
+            Enumeration<SoccerPlayer> players = soccerHash.elements();
+            return true;
+        }
+        catch (FileNotFoundException e){
+            Log.d("File not found", "File not found exception");
+            return false;
+        }
+
     }
 
     /**
@@ -281,25 +371,31 @@ public class SoccerDatabase implements SoccerDB {
      */
     // write data to file
     @Override
-    public boolean writeData(File file) throws FileNotFoundException {
-        String fileName = file.getName();
-        PrintWriter pw = new PrintWriter(file);
-        Enumeration<SoccerPlayer> players = soccerHash.elements();
-        while(players.hasMoreElements()){
-            SoccerPlayer tempPlayer = players.nextElement();
-            pw.println(logString(tempPlayer.getFirstName()));
-            pw.println(logString(tempPlayer.getLastName()));
-            pw.println(logString(tempPlayer.getTeamName()));
-            pw.println(logString(Integer.toString(tempPlayer.getUniform())));
-            pw.println(logString(Integer.toString(tempPlayer.getGoals())));
-            pw.println(logString(Integer.toString(tempPlayer.getAssists())));
-            pw.println(logString(Integer.toString(tempPlayer.getShots())));
-            pw.println(logString(Integer.toString(tempPlayer.getSaves())));
-            pw.println(logString(Integer.toString(tempPlayer.getFouls())));
-            pw.println(logString(Integer.toString(tempPlayer.getYellowCards())));
-            pw.println(logString(Integer.toString(tempPlayer.getRedCards())));
+    public boolean writeData(File file)  {
+        try {
+            String fileName = file.getName();
+            PrintWriter pw = new PrintWriter(file);
+            Enumeration<SoccerPlayer> players = soccerHash.elements();
+            while (players.hasMoreElements()) {
+                SoccerPlayer tempPlayer = players.nextElement();
+                pw.println(logString(tempPlayer.getFirstName()));
+                pw.println(logString(tempPlayer.getLastName()));
+                pw.println(logString(tempPlayer.getTeamName()));
+                pw.println(logString(Integer.toString(tempPlayer.getUniform())));
+                pw.println(logString(Integer.toString(tempPlayer.getGoals())));
+                pw.println(logString(Integer.toString(tempPlayer.getAssists())));
+                pw.println(logString(Integer.toString(tempPlayer.getShots())));
+                pw.println(logString(Integer.toString(tempPlayer.getSaves())));
+                pw.println(logString(Integer.toString(tempPlayer.getFouls())));
+                pw.println(logString(Integer.toString(tempPlayer.getYellowCards())));
+                pw.println(logString(Integer.toString(tempPlayer.getRedCards())));
+            }
+            return true;
         }
-        return true;
+        catch (FileNotFoundException e){
+            Log.d("File not found","Caught File not found exception");
+            return false;
+        }
     }
 
     /**
@@ -308,7 +404,7 @@ public class SoccerDatabase implements SoccerDB {
      * @return the string s, unchanged
      */
     private String logString(String s) {
-        Log.i("write string", s);
+        //Log.i("write string", s);
         return s;
     }
 
