@@ -390,6 +390,7 @@ public class SoccerDatabase implements SoccerDB {
                 pw.println(logString(Integer.toString(tempPlayer.getYellowCards())));
                 pw.println(logString(Integer.toString(tempPlayer.getRedCards())));
             }
+            pw.close();
             return true;
         }
         catch (FileNotFoundException e){
